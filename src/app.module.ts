@@ -24,6 +24,9 @@ import { InvitationsModule } from './invitations/invitations.module';
           database: configService.get<string>('DB_NAME'),
           entities: [__dirname + '/**/*.entity.{js,ts}'],
           synchronize: true,
+          ssl: {
+            rejectUnauthorized: false,
+          },
           logging: true,
         };
       },
