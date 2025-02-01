@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToMany, ManyToOne, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToMany, ManyToOne, OneToMany, JoinTable } from 'typeorm';
 import { User } from '../users/users.entity';
 import { Invitation } from '../invitations/invitations.entity';
 
@@ -20,6 +20,11 @@ export class Group {
   owner: User;
 
   @ManyToMany(() => User, (user) => user.groups)
+  @JoinTable({
+    name: 'group_users', // Nombre de la tabla intermedia
+    joinColumn: { name: 'group_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'user_id', referencedColumnName: 'id' },
+  })
   users: User[];
 
   @OneToMany(() => Invitation, (invitation) => invitation.group)
