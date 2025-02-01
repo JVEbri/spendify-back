@@ -21,6 +21,9 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "schema:drop": "typeorm schema:drop --dataSource src/config/orgm.config.ts"
   },
+  "engines": {
+    "node": "22.x"
+  },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.3.0",
