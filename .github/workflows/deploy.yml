@@ -3,34 +3,34 @@ name: Deploy API to Kubernetes
 on:
   push:
     branches:
-      - main  # Se ejecuta cuando haces push a main
+      - main # Se ejecuta cuando haces push a main
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout código
-      uses: actions/checkout@v4
+      - name: Checkout código
+        uses: actions/checkout@v4
 
-    - name: Iniciar sesión en DockerHub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_PASSWORD }}
+      - name: Iniciar sesión en DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUBUSERNAME }}
+          password: ${{ secrets.DOCKERHUBPASSWORD }}
 
-    - name: Construir y subir imagen a DockerHub
-      run: |
-        docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/spendify-api:latest .
-        docker push ${{ secrets.DOCKERHUB_USERNAME }}/spendify-api:latest
+      - name: Construir y subir imagen a DockerHub
+        run: |
+          docker build -t ${{ secrets.DOCKERHUBUSERNAME }}/spendify-api:latest .
+          docker push ${{ secrets.DOCKERHUBUSERNAME }}/spendify-api:latest
 
-    - name: Configurar kubectl
-      run: |
-        mkdir -p ~/.kube
-        echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
-        chmod 600 ~/.kube/config
+      - name: Configurar kubectl
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
+          chmod 600 ~/.kube/config
 
-    - name: Actualizar Kubernetes con nueva imagen
-      run: |
-        kubectl set image deployment/spendify-api -n spendify api=${{ secrets.DOCKERHUB_USERNAME }}/spendify-api:latest
-        kubectl rollout status deployment/spendify-api -n spendify
+      - name: Actualizar Kubernetes con nueva imagen
+        run: |
+          kubectl set image deployment/spendify-api -n spendify api=${{ secrets.DOCKERHUBUSERNAME }}/spendify-api:latest
+          kubectl rollout status deployment/spendify-api -n spendify
