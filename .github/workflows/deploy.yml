@@ -30,7 +30,36 @@ jobs:
           echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
           chmod 600 ~/.kube/config
 
-      - name: Actualizar Kubernetes con nueva imagen
+      - name: Eliminar secretos anteriores en Kubernetes (para evitar errores)
+        run: |
+          kubectl delete secret spendify-secrets -n spendify --ignore-not-found
+
+      - name: Crear secretos en Kubernetes
+        run: |
+          kubectl create secret generic spendify-secrets -n spendify \
+            --from-literal=DB_HOST="${{ secrets.DB_HOST }}" \
+            --from-literal=DB_NAME="${{ secrets.DB_NAME }}" \
+            --from-literal=DB_USERNAME="${{ secrets.DB_USERNAME }}" \
+            --from-literal=DB_PASSWORD="${{ secrets.DB_PASSWORD }}" \
+            --from-literal=DB_PORT="${{ secrets.DB_PORT }}" \
+            --from-literal=JWT_SECRET="${{ secrets.JWT_SECRET }}" \
+            --from-literal=EMAIL_USER="${{ secrets.EMAIL_USER }}" \
+            --from-literal=EMAIL_PASS="${{ secrets.EMAIL_PASS }}" \
+            --from-literal=GOOGLE_CLIENT_ID="${{ secrets.GOOGLE_CLIENT_ID }}" \
+            --from-literal=GOOGLE_CLIENT_SECRET="${{ secrets.GOOGLE_CLIENT_SECRET }}" \
+            --from-literal=GOOGLE_CALLBACK_URL="${{ secrets.GOOGLE_CALLBACK_URL }}" \
+            --from-literal=FRONTEND_URL="${{ secrets.FRONTEND_URL }}" \
+            --from-literal=NODE_ENV="${{ secrets.NODE_ENV }}"
+
+      - name: Reemplazar usuario en archivos de Kubernetes
+        run: |
+          sed -i 's|tu_usuario_dockerhub|${{ secrets.DOCKERHUBUSERNAME }}|g' k8s/deployment.yaml
+
+      - name: Aplicar configuración en Kubernetes
+        run: |
+          kubectl apply -f k8s/ -n spendify
+
+      - name: **Forzar actualización de la imagen**
         run: |
           kubectl set image deployment/spendify-api -n spendify api=${{ secrets.DOCKERHUBUSERNAME }}/spendify-api:latest
           kubectl rollout status deployment/spendify-api -n spendify
