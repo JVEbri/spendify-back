@@ -10,11 +10,16 @@ COPY package*.json ./
 # 4️⃣ Instala las dependencias
 RUN npm install --only=production
 
+RUN npm install -g @nestjs/cli
+
 # 5️⃣ Copia el código fuente al contenedor
 COPY . .
 
+COPY .env .env
+
 # 6️⃣ Construye la aplicación
 RUN npm run build
+
 
 # 7️⃣ Expone el puerto en el que corre NestJS (3000 por defecto)
 EXPOSE 3000
