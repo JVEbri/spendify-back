@@ -15,8 +15,6 @@ RUN npm install -g @nestjs/cli
 # 5️⃣ Copia el código fuente al contenedor
 COPY . .
 
-COPY .env .env
-
 # 6️⃣ Construye la aplicación
 RUN npm run build
 
