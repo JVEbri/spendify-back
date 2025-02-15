@@ -1,0 +1,16 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: spendify-api-ingress
+  namespace: spendify
+spec:
+  entryPoints:
+    - websecure # Traefik maneja HTTPS automáticamente
+  routes:
+    - match: Host(`spendify-api.jvebri.pro`)
+      kind: Rule
+      services:
+        - name: spendify-service
+          port: 80 # Asegúrate de que este es el puerto de tu servicio en Kubernetes
+  tls:
+    certResolver: default # Esto activa HTTPS automático en Traefik
