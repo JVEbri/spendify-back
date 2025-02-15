@@ -50,6 +50,7 @@ export class GroupsService {
   }
 
   async getGroups(userId: string): Promise<Group[]> {
+    console.log('🔄 Obteniendo grupos del usuario:', userId);
     const groups = await this.groupRepository.find({
       where: { users: { id: userId } },
       relations: ['owner', 'users'],

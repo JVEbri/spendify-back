@@ -18,6 +18,7 @@ export class GroupsController {
   @UseGuards(JwtAuthGuard)
   @Get()
   async getGroups(@Req() @CurrentUser() user: User) {
+    console.log('🔄 Obteniendo grupos del usuario:', user);
     const groups = await this.groupsService.getGroups(user.id);
     return groups;
   }

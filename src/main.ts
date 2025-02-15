@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { writeFileSync } from 'fs';
-import * as cookieParser from 'cookie-parser';
+import * as cookieParser from 'cookie-parser'; // 🔹 Importación corregida
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 async function bootstrap() {

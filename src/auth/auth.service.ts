@@ -6,12 +6,12 @@ export class AuthService {
   constructor(private readonly jwtService: JwtService) {}
 
   generateJwt(user: any): string {
-    const payload = { sub: user.googleId, email: user.email };
+    const payload = { sub: user.id, email: user.email };
     return this.jwtService.sign(payload, { expiresIn: '2h' });
   }
 
   generateRefreshToken(user: any): string {
-    const payload = { sub: user.google_id };
+    const payload = { sub: user.id };
     return this.jwtService.sign(payload, { expiresIn: '7d' });
   }
 }
