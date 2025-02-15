@@ -37,7 +37,7 @@ async function bootstrap() {
 
   writeFileSync('./openapi.json', JSON.stringify(document));
 
-  await app.listen(3000);
+  await app.listen(3001);
   console.log(`🚀 Aplicación corriendo en ${await app.getUrl()}`);
   console.log('📜 Swagger disponible en /api');
 }
