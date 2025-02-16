@@ -62,4 +62,5 @@ jobs:
       - name: Forzar actualización de la imagen
         run: |
           kubectl set image deployment/spendify-api -n spendify api=${{ secrets.DOCKERHUBUSERNAME }}/spendify-api:latest
+          kubectl rollout restart deployment spendify-api -n spendify
           kubectl rollout status deployment/spendify-api -n spendify
