@@ -50,12 +50,15 @@ export class GroupsService {
   }
 
   async getGroups(userId: string): Promise<Group[]> {
+    if (!userId) {
+      throw new Error('🔴 Error de seguridad: No se ha proporcionado un userId válido.');
+    }
+
     console.log('🔄 Obteniendo grupos del usuario:', userId);
-    const groups = await this.groupRepository.find({
+
+    return this.groupRepository.find({
       where: { users: { id: userId } },
       relations: ['owner', 'users'],
     });
-
-    return groups;
   }
 }
