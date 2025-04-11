@@ -1,10 +1,11 @@
-import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { Post } from '@nestjs/common';
 import { RefreshTokenGuard } from './refresh-token.guard';
+import { LoginDto } from './dto/login.dto';
 @ApiTags('Autenticación') // Grupo de rutas en Swagger
 @Controller('auth')
 export class AuthController {
@@ -70,5 +71,12 @@ export class AuthController {
     const user = req.user; // Información del usuario extraída del refresh token
     const newAccessToken = this.authService.generateJwt(user); // Generar nuevo JWT
     return { accessToken: newAccessToken };
+  }
+
+  @Post('login')
+  @ApiResponse({ status: 200, description: 'Login correcto' })
+  @ApiResponse({ status: 401, description: 'Credenciales inválidas' })
+  login(@Body() loginDto: LoginDto) {
+    return this.authService.login(loginDto);
   }
 }
