@@ -17,7 +17,7 @@ export class AuthService {
       password: 'admin', // En real life esto va hasheado
     },
   ];
-
+  //COMMENT
   async login({ email, password }: LoginDto) {
     if (email !== 'ebrigomezjv@gmail.com') {
       throw new UnauthorizedException('Email no permitido');
