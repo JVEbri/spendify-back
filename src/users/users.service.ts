@@ -1,14 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { User } from './users.entity';
+import { UsersRepository } from './users.repository';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
-  ) {}
+  constructor(private readonly userRepository: UsersRepository) {}
 
   // Buscar o crear un usuario
   async findOrCreate(googleUser: Partial<User>): Promise<User> {
@@ -50,5 +46,9 @@ export class UsersService {
 
   async remove(id: string): Promise<void> {
     await this.userRepository.delete(id);
+  }
+
+  async findByIdWithGroups(userId: string): Promise<User | null> {
+    return this.userRepository.findByIdWithGroups(userId);
   }
 }

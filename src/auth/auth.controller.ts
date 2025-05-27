@@ -61,7 +61,7 @@ export class AuthController {
     if (invitationToken) {
       res.redirect(`${frontendUrl}/accept-invitation/${invitationToken}?token=${token}`);
     } else {
-      res.redirect(`${frontendUrl}?token=${token}`);
+      res.redirect(`${frontendUrl}/redirect?token=${token}`);
     }
   }
 

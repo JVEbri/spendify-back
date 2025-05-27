@@ -12,7 +12,7 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Get('me')
   getProfile(@CurrentUser() user: any) {
-    return user; // Devuelve el usuario autenticado
+    return this.usersService.findByIdWithGroups(user.id);
   }
   // Obtener todos los usuarios
   @UseGuards(JwtAuthGuard)

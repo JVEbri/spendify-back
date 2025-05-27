@@ -5,9 +5,10 @@ import { GroupsController } from './groups.controller';
 import { Group } from './groups.entity';
 import { User } from '../users/users.entity';
 import { UsersService } from '../users/users.service';
+import { UsersModule } from '../users/users.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Group, User])],
+  imports: [TypeOrmModule.forFeature([Group, User]), UsersModule],
   controllers: [GroupsController],
   providers: [GroupsService, UsersService],
   exports: [GroupsService],
