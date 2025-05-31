@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable, OneToMany } from 'typeorm';
 import { Group } from '../groups/groups.entity';
+import { Expense } from '../expenses/expenses.entity';
 
 @Entity()
 export class User {
@@ -31,4 +32,9 @@ export class User {
 
   @OneToMany(() => Group, (group) => group.owner) // Relación con los grupos creados por el usuario
   ownedGroups: Group[];
+
+  // src/users/users.entity.ts
+
+  @OneToMany(() => Expense, (expense) => expense.user)
+  expenses: Expense[];
 }

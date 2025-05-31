@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToMany, ManyToOne, OneToMany, JoinTable } from 'typeorm';
 import { User } from '../users/users.entity';
 import { Invitation } from '../invitations/invitations.entity';
-
+import { Expense } from '../expenses/expenses.entity';
 @Entity()
 export class Group {
   @PrimaryGeneratedColumn('uuid')
@@ -29,4 +29,7 @@ export class Group {
 
   @OneToMany(() => Invitation, (invitation) => invitation.group)
   invitations: Invitation[];
+
+  @OneToMany(() => Expense, (expense) => expense.group)
+  expenses: Expense[];
 }

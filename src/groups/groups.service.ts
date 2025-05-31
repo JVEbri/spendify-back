@@ -1,64 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Group } from './groups.entity';
+import { GroupsRepository } from './groups.repository';
 import { User } from '../users/users.entity';
+import { UsersRepository } from 'src/users/users.repository';
 
 @Injectable()
 export class GroupsService {
   constructor(
-    @InjectRepository(Group) private readonly groupRepository: Repository<Group>,
-    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    private readonly groupsRepository: GroupsRepository,
+    @InjectRepository(User)
+    private readonly usersRepository: UsersRepository,
   ) {}
 
-  async createGroup(name: string, ownerId: string): Promise<Group> {
-    // 🔹 1️⃣ Buscar al usuario dueño
-    const owner = await this.userRepository.findOne({ where: { id: ownerId } });
-    console.log('owner', owner);
-    if (!owner) {
-      throw new Error('Usuario no encontrado');
-    }
+  async createGroup(name: string, ownerId: string) {
+    const owner = await this.usersRepository.findOne({ where: { id: ownerId } });
+    if (!owner) throw new Error('Usuario no encontrado');
 
-    // 🔹 2️⃣ Crear el grupo sin usuarios (solo con el owner)
-    let group = this.groupRepository.create({
-      name,
-      owner, // TypeORM lo guarda automáticamente por la relación @ManyToOne
-    });
+    const group = this.groupsRepository.create({ name, owner });
+    const savedGroup = await this.groupsRepository.save(group);
 
-    // 🔹 3️⃣ Guardar el grupo primero antes de agregar la relación ManyToMany
-    group = await this.groupRepository.save(group); // Aseguramos que tenga un ID
-    console.log('group', group);
-    // 🔹 4️⃣ Ahora sí, añadir el usuario a la tabla intermedia `group_users`
-    await this.groupRepository.createQueryBuilder().relation(Group, 'users').of(owner.id).add(group.id);
-
-    return group;
+    return this.groupsRepository.addUserToGroup(savedGroup.id, owner);
   }
 
-  async addUserToGroup(userId: string, groupId: string): Promise<Group> {
-    const user = await this.userRepository.findOne({ where: { id: userId } });
-    const group = await this.groupRepository.findOne({
-      where: { id: groupId },
-      relations: ['users'],
-    });
+  async addUserToGroup(userId: string, groupId: string) {
+    const user = await this.usersRepository.findOne({ where: { id: userId } });
+    if (!user) throw new Error('Usuario no encontrado');
 
-    if (!user || !group) {
-      throw new Error('Usuario o grupo no encontrado');
-    }
-
-    group.users.push(user);
-    return this.groupRepository.save(group);
+    return this.groupsRepository.addUserToGroup(groupId, user);
   }
 
-  async getGroups(userId: string): Promise<Group[]> {
-    if (!userId) {
-      throw new Error('🔴 Error de seguridad: No se ha proporcionado un userId válido.');
-    }
-
-    console.log('🔄 Obteniendo grupos del usuario:', userId);
-
-    return this.groupRepository.find({
-      where: { users: { id: userId } },
-      relations: ['owner', 'users'],
-    });
+  async getGroups(userId: string) {
+    return this.groupsRepository.getGroupsForUser(userId);
   }
 }

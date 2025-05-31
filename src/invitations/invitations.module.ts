@@ -8,9 +8,10 @@ import { GroupsService } from '../groups/groups.service'; // Para validaciones d
 import { Group } from './../groups/groups.entity';
 import { User } from '../users/users.entity';
 import { UsersService } from '../users/users.service';
-import { UsersModule } from 'src/users/users.module';
+import { UsersModule } from '../users/users.module';
+import { GroupsModule } from '../groups/groups.module';
 @Module({
-  imports: [TypeOrmModule.forFeature([Invitation, Group, User]), UsersModule],
+  imports: [TypeOrmModule.forFeature([Invitation, Group, User]), UsersModule, GroupsModule],
   controllers: [InvitationsController],
   providers: [InvitationsService, MailService, GroupsService, UsersService],
   exports: [InvitationsService],

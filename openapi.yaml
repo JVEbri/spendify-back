@@ -122,6 +122,115 @@ paths:
           description: ''
       tags:
         - Invitations
+  /expenses/group/{groupId}:
+    get:
+      operationId: ExpensesController_findByGroup
+      parameters:
+        - name: groupId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      tags:
+        - Expenses
+  /expenses:
+    post:
+      operationId: ExpensesController_create
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+        - Expenses
+  /expenses/{id}:
+    delete:
+      operationId: ExpensesController_delete
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      tags:
+        - Expenses
+  /expenses/group/{groupId}/meta/add:
+    patch:
+      operationId: ExpensesController_addMetaColumn
+      parameters:
+        - name: groupId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: month
+          required: true
+          in: query
+          schema:
+            type: number
+        - name: year
+          required: true
+          in: query
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+      tags:
+        - Expenses
+  /expenses/group/{groupId}/meta/remove:
+    patch:
+      operationId: ExpensesController_removeMetaColumn
+      parameters:
+        - name: groupId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: month
+          required: true
+          in: query
+          schema:
+            type: number
+        - name: year
+          required: true
+          in: query
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+      tags:
+        - Expenses
+  /expenses/group/{groupId}/meta/rename:
+    patch:
+      operationId: ExpensesController_renameMetaColumn
+      parameters:
+        - name: groupId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: month
+          required: true
+          in: query
+          schema:
+            type: number
+        - name: year
+          required: true
+          in: query
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+      tags:
+        - Expenses
   /users/me:
     get:
       operationId: UsersController_getProfile

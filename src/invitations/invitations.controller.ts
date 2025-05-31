@@ -5,12 +5,14 @@ import { GroupsService } from '../groups/groups.service';
 import { User } from 'src/users/users.entity';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { JwtAuthGuard } from '../auth/jwt.guard';
+import { UsersService } from '../users/users.service';
 
 @Controller('invitations')
 export class InvitationsController {
   constructor(
     private readonly invitationsService: InvitationsService,
     private readonly groupsService: GroupsService,
+    private readonly userService: UsersService,
   ) {}
 
   @UseGuards(JwtAuthGuard) // Protegemos la ruta con autenticación
@@ -27,10 +29,11 @@ export class InvitationsController {
 
   @Post('accept')
   async acceptInvitation(@Body() { token }: { token: string }) {
-    await this.invitationsService.acceptInvitation(token);
+    const invitation = await this.invitationsService.acceptInvitation(token);
 
-    // Procesar la invitación (e.g., añadir al usuario al grupo)
-    //await this.groupsService.addUserToGroup(invitation.groupId, invitation.userId);
+    const user = await this.userService.findOneByEmail(invitation.email);
+    console.log('user', user);
+    await this.groupsService.addUserToGroup(user.id, invitation.group.id);
 
     // Eliminar la invitación para que no pueda usarse de nuevo
     //await this.invitationsService.deleteInvitation(token);

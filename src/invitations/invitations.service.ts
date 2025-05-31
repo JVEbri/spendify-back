@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Invitation } from './invitations.entity';
@@ -29,7 +29,11 @@ export class InvitationsService {
 
     // Enviar correo al usuario con el enlace único
     const invitationLink = `${process.env.FRONTEND_URL}/accept-invitation/${token}`;
-    await this.mailService.sendMail(dto.email, 'Invitación a unirse al grupo', `Te han invitado a unirte al grupo. Haz clic en el enlace para aceptar: ${invitationLink}`);
+    await this.mailService.sendMail(
+      dto.email,
+      'Invitación a unirse al grupo',
+      `Te han invitado a unirte al grupo. Haz clic en el enlace para aceptar: ${invitationLink}`,
+    );
 
     return { message: 'Invitación creada y correo enviado' };
   }
@@ -56,12 +60,14 @@ export class InvitationsService {
     await this.invitationRepository.delete(id);
   }
 
-  async acceptInvitation(token: string) {
+  async acceptInvitation(token: string): Promise<Invitation> {
+    console.log('✅ Ejecutando acceptInvitation() en InvitationsService...');
+    console.log('🔄 Token:', token);
     const invitation = await this.invitationRepository.findOne({
       where: { token, isUsed: false },
       relations: ['group'],
     });
-
+    console.log('🔄 Invitación:', invitation);
     if (!invitation) {
       throw new Error();
     }
@@ -74,6 +80,6 @@ export class InvitationsService {
     // (implementa lógica según tu caso)
     //this.groupService.addUserToGroup(userId, invitation.group.id);
 
-    return { message: 'Te has unido al grupo' };
+    return invitation;
   }
 }
