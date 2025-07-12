@@ -61,4 +61,17 @@ export class ExpensesRepository extends Repository<Expense> {
       .andWhere('EXTRACT(YEAR FROM date) = :year', { year })
       .execute();
   }
+
+  async updateExpense(id: string, data: Partial<Expense> & { user_id?: string }) {
+    const cleanData: any = { ...data };
+
+    if (data.user_id) {
+      cleanData.user = { id: data.user_id };
+      delete cleanData.user_id;
+    }
+
+    await this.createQueryBuilder().update(Expense).set(cleanData).where('id = :id', { id }).execute();
+
+    return this.findOne({ where: { id } });
+  }
 }

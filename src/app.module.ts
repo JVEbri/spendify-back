@@ -7,6 +7,7 @@ import { GroupsModule } from './groups/groups.module';
 import { InvitationsModule } from './invitations/invitations.module';
 import { ExpensesModule } from './expenses/expenses.module';
 import { QueryHelperModule } from './common/query-helper.module';
+import { LoggingModule } from './logging/logging.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { QueryHelperModule } from './common/query-helper.module';
       },
       inject: [ConfigService],
     }),
+    LoggingModule,
   ],
 })
 export class AppModule {}

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, UseGuards, Query, Patch } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, UseGuards, Query, Patch, Put } from '@nestjs/common';
 import { ExpensesService } from './expenses.service';
 import { Expense } from './expenses.entity';
 import { JwtAuthGuard } from '../auth/jwt.guard';
@@ -8,6 +8,11 @@ import { QueryHelperDto } from '../common/QueryHelper.dto';
 @UseGuards(JwtAuthGuard)
 export class ExpensesController {
   constructor(private readonly expensesService: ExpensesService) {}
+
+  @Put(':id')
+  update(@Param('id') id: string, @Body() data: Partial<Expense>) {
+    return this.expensesService.updateExpense(id, data);
+  }
 
   @Get('group/:groupId')
   findByGroup(@Param('groupId') groupId: string, @Query() query: QueryHelperDto) {

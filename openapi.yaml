@@ -122,6 +122,33 @@ paths:
           description: ''
       tags:
         - Invitations
+  /expenses/{id}:
+    put:
+      operationId: ExpensesController_update
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      tags:
+        - Expenses
+    delete:
+      operationId: ExpensesController_delete
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      tags:
+        - Expenses
   /expenses/group/{groupId}:
     get:
       operationId: ExpensesController_findByGroup
@@ -142,20 +169,6 @@ paths:
       parameters: []
       responses:
         '201':
-          description: ''
-      tags:
-        - Expenses
-  /expenses/{id}:
-    delete:
-      operationId: ExpensesController_delete
-      parameters:
-        - name: id
-          required: true
-          in: path
-          schema:
-            type: string
-      responses:
-        '200':
           description: ''
       tags:
         - Expenses

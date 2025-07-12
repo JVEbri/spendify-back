@@ -21,6 +21,10 @@ export class ExpensesService {
     return this.expensesRepo.delete(id);
   }
 
+  async updateExpense(id: string, data: Partial<Expense>) {
+    return this.expensesRepo.updateExpense(id, data);
+  }
+
   async addMetaColumn(groupId: string, month: number, year: number, key: string) {
     return this.expensesRepo.addMetaColumn(groupId, month, year, key);
   }
