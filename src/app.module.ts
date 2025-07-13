@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
@@ -8,6 +8,7 @@ import { InvitationsModule } from './invitations/invitations.module';
 import { ExpensesModule } from './expenses/expenses.module';
 import { QueryHelperModule } from './common/query-helper.module';
 import { LoggingModule } from './logging/logging.module';
+import { TraceMiddleware } from './logging/trace.middleware';
 
 @Module({
   imports: [
@@ -38,4 +39,8 @@ import { LoggingModule } from './logging/logging.module';
     LoggingModule,
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(TraceMiddleware).forRoutes('*');
+  }
+}
