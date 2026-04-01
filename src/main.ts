@@ -10,7 +10,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
 
-  // Middleware para cookies
+  // Middleware para cookies FORCE PUSH
   app.use(cookieParser());
 
   // Configuración de CORS
