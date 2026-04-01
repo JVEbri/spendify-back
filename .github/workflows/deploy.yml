@@ -27,8 +27,9 @@ jobs:
       - name: Configurar kubectl
         run: |
           mkdir -p ~/.kube
-          echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
+          echo "${{ secrets.KUBECONFIG_B64 }}" | base64 -d > ~/.kube/config
           chmod 600 ~/.kube/config
+          kubectl config view
 
       - name: Eliminar secretos anteriores en Kubernetes (para evitar errores)
         run: |
